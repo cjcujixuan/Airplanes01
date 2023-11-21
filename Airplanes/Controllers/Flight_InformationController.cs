@@ -69,11 +69,11 @@ namespace Airplanes.Controllers
         }
         [HttpDelete]
         [Route("{id}")]
-        public async Task<IActionResult> DeleteMember(Guid id) 
+        public async Task<IActionResult> DeleteFlight_information(Guid id) 
         { 
             try 
             { 
-                await _member.DeleteMember(id); 
+                await _Flight_information.DeleteFlight_information(id); 
                 return Ok(new 
                 { 
                     Success = true, Message = "Member Deleted." 
