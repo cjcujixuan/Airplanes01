@@ -72,12 +72,13 @@ namespace Airplanes.Controllers
         public async Task<IActionResult> DeleteFlight_information(Guid id) 
         { 
             try 
+            {
+            await _Flight_information.DeleteFlight_information(id); 
+            return OK(new 
             { 
-                await _Flight_information.DeleteFlight_information(id); 
-                return Ok(new 
-                { 
-                    Success = true, Message = "Member Deleted." 
-                }); 
+                Success = true, 
+                Message = "Flight_information Deleted."
+            }); 
             } 
             catch (Exception ex) 
             { 
