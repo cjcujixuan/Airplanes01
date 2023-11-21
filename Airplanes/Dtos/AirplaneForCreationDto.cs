@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 namespace Airplanes.Dtos
 {
-    public class AirplaneForCreation
+    public class AirplaneForCreationDto
     {
         [Required]
         [StringLength(20, ErrorMessage = "Maximum 20 characters")]

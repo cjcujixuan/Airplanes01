@@ -1,3 +1,7 @@
+using Airplanes.Contracts;
+using Airplanes.Repositories;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,7 +13,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAirport, AirportRepository>();
 builder.Services.AddScoped<IAirplane, AirplaneRepository>();
 builder.Services.AddScoped<IFlight_Information, Flight_InformationRepository>();
-123
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -2,6 +2,7 @@
 using Airplanes.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using Airplanes.Utilities;
 
 namespace Airplanes.Controllers
 {
@@ -9,15 +10,17 @@ namespace Airplanes.Controllers
     [ApiController]
     public class AirplaneController : ControllerBase 
     {
-        private readonly string _connectString = DBUtil.ConnectionString(); 
+        private readonly string _connectString = DbContext.ConnectionString(); 
         [HttpGet]// search all
-        public async Task<IEnumerable<Airplane>> GetAirplanes()
+        public async Task<IEnumerable<Airplane>> GetAirplane()
         {
-            string sqlQuery = "SELECT * FROM Airplane"; 
+            string sqlQuery = "SELECT * FROM Airplane";
             using (var connection = new SqlConnection(_connectString))
-                { var Airplanes = await connection.QueryAsync<Airplane>(sqlQuery); 
-                return Airplanes.ToList(); }
-        } 
+            {
+                var Airplane = await connection.QueryAsync<Airplane>(sqlQuery);
+                return Airplane.ToList();
+            }
+        }
         [HttpGet("{id}")]//search only id
         public async Task<Airplane> GetAirplane(Guid id) 
         {
@@ -56,7 +59,7 @@ namespace Airplanes.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCalendar(int id)
+        public async Task<IActionResult> DeleteAirplane(int id)
         {
             string sqlQuery = "DELETE FROM Airplane WHERE Pid = @Id";
             using (var connection = new SqlConnection(_connectString))
