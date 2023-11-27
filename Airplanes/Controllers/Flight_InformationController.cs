@@ -67,22 +67,22 @@ namespace Airplanes.Controllers
                 }
             }
         }
-        [HttpDelete]
-        [Route("{id}")]
-        public async Task<IActionResult> DeleteFlight_information(Guid id) 
-        { 
-            try 
-            {
-            await _Flight_information.DeleteFlight_information(id); 
-            return OK(new 
-            { 
-                Success = true, 
-                Message = "Flight_information Deleted."
-            }); 
-            } 
-            catch (Exception ex) 
-            { 
-                return StatusCode(500, ex.Message); 
-            } 
-        }
+        //[HttpDelete]
+        //[Route("{id}")]
+        //public async Task<IActionResult> DeleteFlight_information(Guid id) 
+        //{ 
+        //    try 
+        //    {
+        //    await _Flight_information.DeleteFlight_information(id); 
+        //    return OK(new 
+        //    { 
+        //        Success = true, 
+        //        Message = "Flight_information Deleted."
+        //    }); 
+        //    } 
+        //    catch (Exception ex) 
+        //    { 
+        //        return StatusCode(500, ex.Message); 
+        //    } 
+        //}
 }

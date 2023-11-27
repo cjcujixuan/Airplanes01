@@ -28,4 +28,5 @@ namespace Airplanes.Utilities
         public IDbConnection CreateConnection() =>
             new SqlConnection(_connectionString);
     }
+
 }

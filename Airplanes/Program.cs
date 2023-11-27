@@ -1,5 +1,7 @@
 using Airplanes.Contracts;
 using Airplanes.Repositories;
+using Airplanes.Utilities;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,8 +15,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAirport, AirportRepository>();
 builder.Services.AddScoped<IAirplane, AirplaneRepository>();
 builder.Services.AddScoped<IFlight_Information, Flight_InformationRepository>();
-
+builder.Services.AddSingleton<DbContext>();
+builder.Services.AddScoped<ICross, CrossRepository>();
 var app = builder.Build();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
