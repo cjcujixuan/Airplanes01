@@ -47,7 +47,7 @@ namespace Airplanes.Repositories
 
         public async Task<AirportForCreationDto> CreateAirport(AirportForCreationDto airport)
         {
-            string sqlQuery = "INSERT INTO Airport (Aname, Aterminal, Aapron, Aarea) VALUES (@Aname, @@Aterminal, @Aapron, @Aarea)";
+            string sqlQuery = "INSERT INTO Airport (Aname, Aterminal, Aapron, Aarea) VALUES (@Aname, @Aterminal, @Aapron, @Aarea)";
             using (var connection = _dbContext.CreateConnection())
             {
                 await connection.ExecuteAsync(sqlQuery, airport);
@@ -83,5 +83,15 @@ namespace Airplanes.Repositories
             using (var connection = _dbContext.CreateConnection())
             {
                 await connection.ExecuteAsync(sqlQuery, parameters);}}
-            }
+
+        Task<IEnumerable<Airport>> IAirport.GetAllAirports()
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IAirport.GetAirportById(int aid)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

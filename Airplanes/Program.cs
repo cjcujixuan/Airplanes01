@@ -14,9 +14,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAirport, AirportRepository>();
 builder.Services.AddScoped<IAirplane, AirplaneRepository>();
-builder.Services.AddScoped<IFlight_Information, Flight_InformationRepository>();
 builder.Services.AddSingleton<DbContext>();
 builder.Services.AddScoped<ICross, CrossRepository>();
+
 var app = builder.Build();
 
 

@@ -1,74 +1,112 @@
-﻿using Dapper;
+﻿using Airplanes.Contracts;
+using Airplanes.Dtos;
 using Airplanes.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using Airplanes.Utilities;
+using System.Diagnostics.Metrics;
+using System.Security.Cryptography;
 
-namespace Airplanes.Controllers
-{        
+namespace DepartmentStore.Controllers
+{
     [Route("api/[controller]")]
     [ApiController]
     public class AirportController : ControllerBase
     {
-        private readonly string _connectString = DbContext.ConnectionString();
-        [HttpGet]// search all
-        public async Task<IEnumerable<Airport>> GetAirplanes()
+        private readonly ILogger<AirportController> _logger;
+        private readonly IAirport _airport;
+        public AirportController(ILogger<AirportController> logger, IAirport airport)
         {
-            string sqlQuery = "SELECT * FROM Airport";
-            using (var connection = new SqlConnection(_connectString))
-            {
-                var Airplanes = await connection.QueryAsync<Airport>(sqlQuery);
-                return Airplanes.ToList();
-            }
+            _logger = logger;
+            _airport = airport;
         }
-
-        [HttpGet("{id}")]//search only id
-        public async Task<Airport> GetAirportById(Guid id)
+        [HttpGet]
+        public async Task<IActionResult> GetAllAirports()
         {
-            string sqlQuery = "SELECT * FROM Airport WHERE Aid = @Id";
-            using (var connection = new SqlConnection(_connectString))
+            try
             {
-                var Airport = await connection.QueryFirstOrDefaultAsync<Airport>(sqlQuery, new { Id = id });
-                if (Airport == null)
+                var airports = await _airport.GetAllAirports();
+                return Ok(new
                 {
-                    return new Airport();
-                }
-                return Airport;
+                    Success = true,
+                    Message = "All Airports Returned.",
+                    airports
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
-
-        [HttpPost]// post
-        public async Task<IActionResult> AddAirport(Airport Airport)
+        [HttpGet]
+        [Route("{aid}")]
+        public async Task<IActionResult> GetAirportById(Guid aid)
         {
-            string sqlQuery = "INSERT  INTO  Airport  (Aid,  Aname, Aterminal, Aapron, Aarea)  VALUES (@Aid, @Aname, @Aterminal, @Aapron, @Aarea)";
-            using (var connection = new SqlConnection(_connectString))
+            try
             {
-                await connection.ExecuteAsync(sqlQuery, Airport);
-                return Ok();
+                var airport = await _airport.GetAirportById(aid);
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "Airport Returned.",
+                    airport
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
-
-        [HttpPut("{id}")] //put
-        public async Task<IActionResult> UpdateAirport(Airport airport, Guid id)
+        [HttpPost]
+        public async Task<IActionResult> CreateAirport(AirportForCreationDto airport)
         {
-            string sqlQuery = "UPDATE Airport SET Aname = @Aname, Aterminal = @Aterminal, Aapron = @Aapron, Aarea = @Aarea, SELECT * FROM Airport  WHERE Aid = @Aid";
-            airport.Aid = id;
-
-            using (var connection = new SqlConnection(_connectString))
+            try
             {
-                await connection.ExecuteAsync(sqlQuery, airport);
-                return Ok();
+                var newAirport = await _airport.CreateAirport(airport);
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "Airport Created.",
+                    newAirport
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAirport(int id)
+        [HttpPut]
+        [Route("{aid}")]
+        public async Task<IActionResult> UpdateAirport(Guid aid, AirportForUpdateDto airport)
         {
-            string sqlQuery = "DELETE FROM Airport WHERE Aid = @Id";
-            using (var connection = new SqlConnection(_connectString))
+            try
             {
-                await connection.ExecuteAsync(sqlQuery, new { Id = id });
-                return Ok();
+                await _airport.UpdateAirport(aid, airport);
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "Member Updated."
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpDelete]
+        [Route("{aid}")]
+        public async Task<IActionResult> DeleteAirport(Guid aid)
+        {
+            try
+            {
+                await _airport.DeleteAirport(aid);
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "Airport Deleted."
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
 

@@ -1,95 +1,120 @@
-﻿using Dapper;
+﻿using Airplanes.Contracts;
+using Airplanes.Dtos;
 using Airplanes.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
-using Airplanes.Utilities;
 
 namespace Airplanes.Controllers
 {
+
+
+
+
+
+
     [Route("api/[controller]")]
     [ApiController]
-    public class AirplaneController : ControllerBase 
+    public class AirplaneController : ControllerBase
     {
-        private readonly string _connectString = DbContext.ConnectionString(); 
-        [HttpGet]// search all
-        public async Task<IEnumerable<Airplane>> GetAirplane()
+        private readonly ILogger<AirplaneController> _logger;
+        private readonly IAirplane _airplane;
+        public AirplaneController(ILogger<AirplaneController> logger, IAirplane airplane)
         {
-            string sqlQuery = "SELECT * FROM Airplane";
-            using (var connection = new SqlConnection(_connectString))
-            {
-                var Airplane = await connection.QueryAsync<Airplane>(sqlQuery);
-                return Airplane.ToList();
-            }
+            _logger = logger;
+            _airplane = airplane;
         }
-        [HttpGet("{id}")]//search only id
-        public async Task<Airplane> GetAirplane(Guid id) 
+        [HttpGet]
+        public async Task<IActionResult> GetAllAirplanes()
         {
-            string sqlQuery = "SELECT * FROM Airplane WHERE Pid = @Id";
-            using (var connection = new SqlConnection(_connectString))
+            try
             {
-                var Airplane = await connection.QueryFirstOrDefaultAsync<Airplane>(sqlQuery, new { Id = id });
-                if (Airplane == null)
+                var airplanes = await _airplane.GetAllAirplanes();
+                return Ok(new
                 {
-                    return new Airplane();
-                }
-                return Airplane;
+                    Success = true,
+                    Message = "All airplanes Returned.",
+                    airplanes
+                });
             }
-        }
-        [HttpPost]// post
-        public async Task<IActionResult> AddAirplane(Airplane Airplane)
-        {
-            string sqlQuery = "INSERT  INTO  Airplane  (Pid,  Pname, Pseats, Pmaxspeed, Pheavyload)  VALUES (@Pid, @Pname, @Pseats, @Pmaxspeed, @Pheavyload)";
-            using (var connection = new SqlConnection(_connectString)) 
+            catch (Exception ex)
             {
-                await connection.ExecuteAsync(sqlQuery, Airplane);
-                return Ok(); 
+                return StatusCode(500, ex.Message);
             }
         }
-        [HttpPut("{id}")] //put
-        public async Task<IActionResult> UpdateAirplane(Airplane airplane, Guid id)
+        [HttpGet]
+        [Route("{pid}")]
+        public async Task<IActionResult> GetCounterById(Guid pid)
         {
-            string sqlQuery = "UPDATE Airplane SET Pname = @Pname, Pseats = @Pseats, Pmaxspeed = @Pmaxspeed, Pheavyload = @Pheavyload, SELECT * FROM Airplane  WHERE Pid = @Pid";
-            airplane.Pid = id;
+            try
+            {
+                var airplanes = await _airplane.GetAirplaneById(pid);
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "Airplanes Returned.",
+                    airplanes
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateAirplane(AirplaneForCreationDto airplane)
+        {
+            try
+            {
+                var newAirplane = await _airplane.CreateAirplane(airplane);
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "Airplane Created.",
+                    newAirplane
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpPut]
+        [Route("{pid}")]
+        public async Task<IActionResult> UpdateAirplane(Guid pid, AirplaneForUpDateDto airplane)
+        {
+            try
+            {
+                await _airplane.UpdateAirplane(pid, airplane);
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "Airplane Updated."
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+        [HttpDelete]
+        [Route("{pid}")]
+        public async Task<IActionResult> DeleteMember(Guid pid)
+        {
+            try
+            {
+                await _airplane.DeleteAirplane(pid);
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "Airplane Deleted."
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
-            using (var connection = new SqlConnection(_connectString))
-            {
-                await connection.ExecuteAsync(sqlQuery, airplane);
-                return Ok();
-            }
-        }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAirplane(int id)
-        {
-            string sqlQuery = "DELETE FROM Airplane WHERE Pid = @Id";
-            using (var connection = new SqlConnection(_connectString))
-            {
-                await connection.ExecuteAsync(sqlQuery, new { Id = id});
-                return Ok();
-            }
-        }
+
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
