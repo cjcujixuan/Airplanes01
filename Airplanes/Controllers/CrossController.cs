@@ -1,0 +1,37 @@
+﻿using Airplanes.Contracts;
+using Microsoft.AspNetCore.Mvc;
+
+namespace DepartmentStore.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CrossController : ControllerBase
+    {
+        private readonly ILogger<CrossController> _logger;
+        private readonly ICross _cross;
+        public CrossController(ILogger<CrossController> logger, ICross cross)
+        {
+            _logger = logger;
+            _cross = cross;
+        }
+        [HttpGet("AirplaneForAirplane/{cid}")]
+        public async Task<IActionResult> GetCalendarsByMemberId(Guid cid)
+        {
+            try
+            {
+                var counter = await _cross.GetAirplaneByAirportId(cid);
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "輸出Airport的id,name且對應Airplane",
+                    counter
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+    }
+}
+
