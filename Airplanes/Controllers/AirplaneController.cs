@@ -1,6 +1,5 @@
 ﻿using Airplanes.Contracts;
 using Airplanes.Dtos;
-using Airplanes.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Airplanes.Controllers
@@ -97,7 +96,7 @@ namespace Airplanes.Controllers
         }
         [HttpDelete]
         [Route("{pid}")]
-        public async Task<IActionResult> DeleteMember(Guid pid)
+        public async Task<IActionResult> DeleteAirplane(Guid pid)
         {
             try
             {

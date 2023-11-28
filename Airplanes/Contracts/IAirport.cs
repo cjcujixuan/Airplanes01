@@ -15,6 +15,6 @@ namespace Airplanes.Contracts
         public Task UpdateAirport(Guid id, AirportForUpdateDto airport);
         // 刪除Airport資料（依指定id）
         public Task DeleteAirport(Guid id);
-        Task GetAirportById(int aid);
+
     }
 }

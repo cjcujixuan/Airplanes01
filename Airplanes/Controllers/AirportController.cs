@@ -83,7 +83,7 @@ namespace DepartmentStore.Controllers
                 return Ok(new
                 {
                     Success = true,
-                    Message = "Member Updated."
+                    Message = "Airport Updated."
                 });
             }
             catch (Exception ex)

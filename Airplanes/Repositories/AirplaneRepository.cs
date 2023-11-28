@@ -47,7 +47,7 @@ namespace Airplanes.Repositories
 
         public async Task<AirplaneForCreationDto> CreateAirplane(AirplaneForCreationDto airplane)
         {
-            string sqlQuery = "INSERT INTO Airplane (Pname, Pseats, Pmaxspeed, Pheavyload) VALUES (@name, @seats, @maxspeed, @heavyload)";
+            string sqlQuery = "INSERT INTO Airplane (Pname, Pseats, Pmaxspeed, Pheavyload) VALUES (@Pname, @Pseats, @Pmaxspeed, @Pheavyload)";
             using (var connection = _dbContext.CreateConnection())
             {
                 await connection.ExecuteAsync(sqlQuery, airplane);
@@ -60,13 +60,13 @@ namespace Airplanes.Repositories
 
         public async Task UpdateAirplane(Guid id, AirplaneForUpDateDto airplane)
         {
-            string sqlQuery = "UPDATE Airplane SET Pname = @name, Pseats = @seats, Pmaxspeed = @maxspeed, Pheavyload = @heavyload WHERE Pid = @id";
+            string sqlQuery = "UPDATE Airplane SET Pname = @Pname, Pseats = @Pseats, Pmaxspeed = @Pmaxspeed, Pheavyload = @Pheavyload WHERE Pid = @Pid";
             var parameters = new DynamicParameters();
-            parameters.Add("id", id, DbType.Guid);
-            parameters.Add("name", airplane.Pname, DbType.String);
-            parameters.Add("seats", airplane.Pseat, DbType.Int32);
-            parameters.Add("maxspeed", airplane.Pmax_speed, DbType.Double);
-            parameters.Add("heavyload", airplane.Pheavy_load, DbType.Double);
+            parameters.Add("Pid", id, DbType.Guid);
+            parameters.Add("Pname", airplane.Pname, DbType.String);
+            parameters.Add("Pseats", airplane.Pseat, DbType.Int32);
+            parameters.Add("Pmaxspeed", airplane.Pmax_speed, DbType.Double);
+            parameters.Add("Pheavyload", airplane.Pheavy_load, DbType.Double);
             using (var connection = _dbContext.CreateConnection())
             {
                 await connection.ExecuteAsync(sqlQuery, parameters);

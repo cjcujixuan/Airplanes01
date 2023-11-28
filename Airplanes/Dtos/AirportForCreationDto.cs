@@ -7,6 +7,8 @@ namespace Airplanes.Dtos
         [StringLength(20, ErrorMessage = "Maximum 20 characters")] 
         public string Aname { get; set; }
         [Required] public int Aterminal { get; set; }
+        [Required] public int Aapron { get; set; }
+        [Required] public int Aarea { get; set; }
 
     }
 }

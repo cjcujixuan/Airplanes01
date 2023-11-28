@@ -16,7 +16,7 @@ namespace Airplanes.Repositories
             _dbContext = dbContext;
         }
         // 查詢所有Airport資料的實作
-        public async Task<IEnumerable<Airport>> GetAllAirplanes()
+        public async Task<IEnumerable<Airport>> GetAllAirports()
         {
             string sqlQuery = "SELECT * FROM Airport";
             // 建立資料庫連線
@@ -84,14 +84,6 @@ namespace Airplanes.Repositories
             {
                 await connection.ExecuteAsync(sqlQuery, parameters);}}
 
-        Task<IEnumerable<Airport>> IAirport.GetAllAirports()
-        {
-            throw new NotImplementedException();
-        }
 
-        Task IAirport.GetAirportById(int aid)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
