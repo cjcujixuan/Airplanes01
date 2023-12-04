@@ -14,12 +14,12 @@ namespace DepartmentStore.Controllers
             _logger = logger;
             _cross = cross;
         }
-        [HttpGet("AirplaneForAirplane/{cid}")]
-        public async Task<IActionResult> GetCalendarsByMemberId(Guid cid)
+        [HttpGet("AirplaneForAirport/{aid}")]
+        public async Task<IActionResult> GetCalendarsByMemberId(Guid aid)
         {
             try
             {
-                var counter = await _cross.GetAirplaneByAirportId(cid);
+                var counter = await _cross.GetAirplaneByAirportId(aid);
                 return Ok(new
                 {
                     Success = true,
